@@ -5,7 +5,9 @@ import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,11 +23,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calendar: Calendar
     private lateinit var alarmManager: AlarmManager
     private lateinit var pendingIntent: PendingIntent
+    var isAlarmAlreadySet: Boolean = false
+    lateinit var sharedPref: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Get shared preferences
+        sharedPref = getSharedPreferences("roasterPref", Context.MODE_PRIVATE)
+        editor = sharedPref.edit()
+
+        // Load data from shared preferences
+        loadData()
 
         createNotificationChannel()
 
@@ -34,12 +46,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSetAlarm.setOnClickListener {
-            setAlarm()
+            if(!isAlarmAlreadySet) {
+                setAlarm()
+            }
+            else {
+                Toast.makeText(this, "Alarm is already set!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnCancelAlarm.setOnClickListener {
-            cancelAlarm()
+            if(isAlarmAlreadySet) {
+                cancelAlarm()
+            }
+            else {
+                Toast.makeText(this, "No alarm is currently active!", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun loadData() {
+        val alarm_status = sharedPref.getString("alarmStatus", null)
+        isAlarmAlreadySet = sharedPref.getBoolean("isAlarmAlreadySet", false)
+
+        // Set values to respective view
+        binding.alarmStatus.text = alarm_status
     }
 
     private fun cancelAlarm() {
@@ -51,6 +81,11 @@ class MainActivity : AppCompatActivity() {
         alarmManager.cancel(pendingIntent)
 
         val alarm_status = "Alarm is off"
+        isAlarmAlreadySet = false
+
+        // Save data to shared preferences
+        saveData(alarm_status, isAlarmAlreadySet)
+
         binding.alarmStatus.text = alarm_status
 
         Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
@@ -67,8 +102,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         val alarm_status = "Alarm is set to ${binding.tvTime.text}"
+        isAlarmAlreadySet = true
+
+        // Save data to shared preferences
+        saveData(alarm_status, isAlarmAlreadySet)
+
         binding.alarmStatus.text = alarm_status
         Toast.makeText(this, "Alarm Set successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveData(alarmStatus: String, isAlarmAlreadySet: Boolean) {
+        editor.apply {
+            putString("alarmStatus", alarmStatus)
+            putBoolean("isAlarmAlreadySet", isAlarmAlreadySet)
+            apply()
+        }
     }
 
     private fun showTimePicker() {
