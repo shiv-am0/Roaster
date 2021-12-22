@@ -1,5 +1,6 @@
 package com.sriv.shivam.roaster
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -49,6 +50,9 @@ class MainActivity : AppCompatActivity() {
 
         alarmManager.cancel(pendingIntent)
 
+        val alarm_status = "Alarm is off"
+        binding.alarmStatus.text = alarm_status
+
         Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
     }
 
@@ -62,6 +66,8 @@ class MainActivity : AppCompatActivity() {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }
 
+        val alarm_status = "Alarm is set to ${binding.tvTime.text}"
+        binding.alarmStatus.text = alarm_status
         Toast.makeText(this, "Alarm Set successfully", Toast.LENGTH_SHORT).show()
     }
 

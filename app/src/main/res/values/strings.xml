@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Roaster</string>
+    <string name="cancel_alarm">Cancel Alarm</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="select_time">Select Time</string>
+    <string name="time_text">12 : 00 AM</string>
+    <string name="editTextAnswerHint">Write your answer here...</string>
+    <string name="question">Question</string>
+    <string name="answer_the_following_question_to_snooze_the_roaster">Answer the following question to snooze the Roaster...</string>
+    <string name="alarm_status">Alarm is off</string>
 </resources>
