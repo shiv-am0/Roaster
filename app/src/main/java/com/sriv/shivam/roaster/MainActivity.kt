@@ -11,6 +11,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        calendar = Calendar.getInstance()
+
         // Get shared preferences
         sharedPref = getSharedPreferences("roasterPref", Context.MODE_PRIVATE)
         editor = sharedPref.edit()
@@ -46,10 +49,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSetAlarm.setOnClickListener {
+            Log.d("roaster", "In Set Alarm")
             if(!isAlarmAlreadySet) {
+                Log.d("roaster", "In if Set Alarm")
                 setAlarm()
             }
             else {
+                Log.d("roaster", "In else Set Alarm")
                 Toast.makeText(this, "Alarm is already set!", Toast.LENGTH_SHORT).show()
             }
         }
@@ -137,7 +143,13 @@ class MainActivity : AppCompatActivity() {
                 binding.tvTime.text = String.format("%02d", picker.hour) + " : " + String.format("%02d", picker.minute) + " AM"
             }
 
-            calendar = Calendar.getInstance()
+            if((calendar[Calendar.HOUR_OF_DAY] > picker.hour) || ((calendar[Calendar.HOUR_OF_DAY] == picker.hour) && (calendar[Calendar.MINUTE] > picker.minute))) {
+                Log.i("calendar", "picker.hour < HOUR_OF_DAY")
+                Log.i("calendar", "Current day: ${calendar[Calendar.DAY_OF_MONTH]}")
+                calendar[Calendar.DAY_OF_MONTH]++
+                Log.i("calendar", "Alarm shift for: ${calendar[Calendar.DAY_OF_MONTH]}")
+            }
+
             calendar[Calendar.HOUR_OF_DAY] = picker.hour
             calendar[Calendar.MINUTE] = picker.minute
             calendar[Calendar.SECOND] = 0

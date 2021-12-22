@@ -35,7 +35,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, 0, i,0)
 
         val builder = NotificationCompat.Builder(context, "roaster")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Roaster")
             .setContentText("Solve a question to close the alarm")
             .setAutoCancel(true)
