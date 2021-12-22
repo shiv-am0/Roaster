@@ -1,5 +1,6 @@
 package com.sriv.shivam.roaster
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -29,12 +30,18 @@ class DestinationActivity : AppCompatActivity() {
                 // Close the alarm and show message
                 Toast.makeText(this, "Correct Answer. Alarm is set to off.", Toast.LENGTH_SHORT).show()
                 AlarmReceiver.stopMedia()
+                backToMainActivity()
             }
             else {
                 // Error message for wrong answer
                 Toast.makeText(this, "Wrong Answer. Please try again.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun backToMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun createRandomQuestion() {

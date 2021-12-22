@@ -54,7 +54,7 @@
         android:textColorHint="@color/hintColor"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
